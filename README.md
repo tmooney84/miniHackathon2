@@ -3,6 +3,8 @@ miniHackathon2   manyToOneInteractive
 
 #  Your Mission..... Expand this project to implement these methods interactively
 
+see master branch  for baseline code to build on
+
 private static void manageDepartments(Scanner scanner, SessionFactory factory)
 
         System.out.println("\n1. Add Departments");
