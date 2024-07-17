@@ -160,6 +160,11 @@ public class manyToOneInteractive {
 
     private static void assignTeacherToDepartment(Scanner scanner, Session session) {
 
+        // Grab the user input by the Id of teaecher and department
+        // Fetch the entities (Teacher and Department)
+        // Somehow update them?
+        // Error handling
+
         // YOUR CODE
         System.out.println("Which Teacher would you like to modify: ");
 
@@ -172,10 +177,15 @@ public class manyToOneInteractive {
     }
 
     private static void listDepts(Session session) {
+        String deptQuery = "FROM Department";
+        TypedQuery<Department> query = session.createQuery(deptQuery, Department.class);
+        List<Department> results = query.getResultList();
 
-
+        System.out.println("Department Id:               Department Name: ");
+        for (Department d : results) {
+            System.out.println(d.getDeptId() + "       " + d.getDeptName());
+        }
     }
-
     private static void listTeachers(Session session) {
 
 public List<Teacher> getTeacherList() {
