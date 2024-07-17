@@ -53,7 +53,24 @@ public class ManageTeacher {
     }
 
     public static void renameTeacher(Scanner scanner, SessionFactory factory) {
-        //TODO ADD CODE
+        Session session = factory.openSession();
+        Transaction transaction = session.beginTransaction();
+
+        System.out.println("\n1. Enter Id of teacher to rename: ");
+        int userInputTeachId = scanner.nextInt();
+        scanner.nextLine();
+
+        //TODO if else statement to check if teacher id exists
+
+        System.out.println("\n1. Enter new teacher name: ");
+        String userInputNewTeachName = scanner.nextLine();
+
+        Teacher teacher = new Teacher();
+        teacher.setTeacherId(userInputTeachId);
+        teacher.setTeacherName(userInputNewTeachName);
+        session.merge(teacher);
+        transaction.commit();
+        session.close();
     }
 
 
