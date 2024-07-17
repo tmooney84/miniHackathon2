@@ -55,23 +55,31 @@ public class ManageTeacher {
     public static void renameTeacher(Scanner scanner, SessionFactory factory) {
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
+      try {
+          System.out.println("\n1. Enter Id of teacher to rename: ");
+          int userInputTeachId = scanner.nextInt();
+          scanner.nextLine();
 
-        System.out.println("\n1. Enter Id of teacher to rename: ");
-        int userInputTeachId = scanner.nextInt();
-        scanner.nextLine();
+          System.out.println("\n1. Enter new teacher name: ");
+          String userInputNewTeachName = scanner.nextLine();
 
-        //TODO if else statement to check if teacher id exists
+          //TODO if else statement to check if teacher id exists
 
-        System.out.println("\n1. Enter new teacher name: ");
-        String userInputNewTeachName = scanner.nextLine();
-
-        Teacher teacher = new Teacher();
-        teacher.setTeacherId(userInputTeachId);
-        teacher.setTeacherName(userInputNewTeachName);
-        session.merge(teacher);
-        transaction.commit();
-        session.close();
-    }
+          //This session.get creates a teacher object by
+          Teacher teacher = session.get(Teacher.class, userInputTeachId);
+          teacher.setTeacherName(userInputNewTeachName);
+          session.merge(teacher);
+          transaction.commit();
+      }
+      catch(Exception e) {
+          if(transaction != null) {
+              transaction.rollback();
+          }
+          e.printStackTrace();
+        } finally{
+          session.close();
+      }
+      }
 
 
 }

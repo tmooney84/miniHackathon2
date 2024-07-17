@@ -1,5 +1,6 @@
 import jakarta.persistence.TypedQuery;
 import model.Department;
+import model.Teacher;
 import org.example.ManageDept;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -165,18 +166,31 @@ public class manyToOneInteractive {
         // Somehow update them?
         // Error handling
 
-System.out.println("Which Teacher ID would you liek to modify:");
-       // teacher.setTeacherName(userInputNewTeachName);
+        System.out.println("Which Teacher ID would you like to modify:");
+       int teacherId = scanner.nextInt();
+        System.out.println("What department do you want to put Teacher ID #: " +  teacherId );
+        int departmentId = scanner.nextInt();
+      //  System.out.println("What is the new name you want to associate with  Teacher ID #: " +  teacherId );
+      //  scanner.nextLine();
+      //  String newTeacherName = scanner.nextLine();
+        // teacher.setTeacherName(userInputNewTeachName);
+        try {
+            Teacher teacher = session.get(Teacher.class, teacherId);
+            Department department = session.get(Department.class, departmentId);
 
+            if (teacher != null && department != null) {
+            //   teacher.setTeacherName(newTeacherName);
+                teacher.setDepartment(department);
+                session.update(teacher);
+                System.out.println("Teacher assigned to department successfully!");
 
-        // YOUR CODE
-        System.out.println("Which Teacher would you like to modify: ");
+            } else {
+                System.out.println("Teacher or Department not found!");
+            }
 
-        //call listDepts
-        System.out.println("Which department would you like to assign to Teacher: ");
-//change foreign key for Teacher...toupper function that is insensitive and while loop until correct
-        //enter foreign key change for Teacher
+            catch {
 
+            }
 
     }
 

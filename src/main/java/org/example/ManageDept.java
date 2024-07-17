@@ -1,6 +1,7 @@
 package org.example;
 
 import model.Department;
+import model.Teacher;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
@@ -52,8 +53,7 @@ public class ManageDept {
         System.out.println("\n1. Enter new department name: ");
         String userInputNewDeptName = scanner.nextLine();
 
-        Department dept = new Department();
-        dept.setDeptId(userInputDept);
+        Department dept = session.get(Department.class, userInputDept);
         dept.setDeptName(userInputNewDeptName);
         session.merge(dept);
         transaction.commit();
