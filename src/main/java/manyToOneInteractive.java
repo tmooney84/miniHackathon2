@@ -4,6 +4,7 @@ import model.Teacher;
 import org.example.ManageDept;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
 import java.util.List;
@@ -165,7 +166,8 @@ public class manyToOneInteractive {
         // Fetch the entities (Teacher and Department)
         // Somehow update them?
         // Error handling
-
+        Transaction transaction = session.beginTransaction();
+        try {
         System.out.println("Which Teacher ID would you like to modify:");
        int teacherId = scanner.nextInt();
         System.out.println("What department do you want to put Teacher ID #: " +  teacherId );
@@ -174,25 +176,30 @@ public class manyToOneInteractive {
       //  scanner.nextLine();
       //  String newTeacherName = scanner.nextLine();
         // teacher.setTeacherName(userInputNewTeachName);
-        try {
+
             Teacher teacher = session.get(Teacher.class, teacherId);
             Department department = session.get(Department.class, departmentId);
 
             if (teacher != null && department != null) {
-            //   teacher.setTeacherName(newTeacherName);
+                //   teacher.setTeacherName(newTeacherName);
                 teacher.setDepartment(department);
-                session.update(teacher);
+                session.merge(teacher);
+
                 System.out.println("Teacher assigned to department successfully!");
 
-            } else {
+            }
+         else {
                 System.out.println("Teacher or Department not found!");
+
+        } }catch(Exception e){
+            if (transaction != null) {
+                transaction.rollback();
             }
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
 
-            catch {
-
-            }
-
-    }
 
     private static void listDepts(Session session) {
         String deptQuery = "FROM Department";
