@@ -13,22 +13,28 @@ public class ManageDept {
     public static void addDepartment(Scanner scanner, SessionFactory factory) {
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
+try {
+    System.out.println("\n1. Enter name of department to add: ");
+    scanner.nextLine();
 
-        System.out.println("\n1. Enter name of department to add: ");
-        scanner.nextLine();
+    String userInputDept = scanner.nextLine();
 
-        String userInputDept = scanner.nextLine();
+    Department dept = new Department(userInputDept);
+    session.persist(dept);
+    transaction.commit();
+}catch (Exception e){
+    transaction.rollback();
 
-        Department dept = new Department(userInputDept);
-        session.persist(dept);
-        transaction.commit();
-        session.close();
+}finally {
+    session.close();
+}
+
     }
 
     public static void deleteDepartment(Scanner scanner, SessionFactory factory) {
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
-
+    try {
         System.out.println("\n1. Enter Id of department to remove: ");
         scanner.nextLine();
 
@@ -38,14 +44,20 @@ public class ManageDept {
         dept.setDeptId(userInputDept);
         session.remove(dept);
         transaction.commit();
+    }catch (Exception e){
+        transaction.rollback();
+        e.printStackTrace();
+    }finally {
         session.close();
+    }
+
     }
 
     public static void renameDepartment(Scanner scanner, SessionFactory factory) {
         //Rename department
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
-
+    try {
         System.out.println("\n1. Enter Id of department to modify: ");
         int userInputDept = scanner.nextInt();
         scanner.nextLine();
@@ -57,7 +69,14 @@ public class ManageDept {
         dept.setDeptName(userInputNewDeptName);
         session.merge(dept);
         transaction.commit();
+    }catch (Exception e){
+        transaction.rollback();
+        e.printStackTrace();
+
+        }finally {
         session.close();
+    }
+
     }
 
 

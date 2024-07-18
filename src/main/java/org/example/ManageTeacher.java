@@ -14,7 +14,7 @@ public class ManageTeacher {
     public static void addTeachers(Scanner scanner, SessionFactory factory) {
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
-
+    try  {
         System.out.println("\n1. Enter name of teacher to add: ");
         scanner.nextLine();
 
@@ -31,25 +31,38 @@ public class ManageTeacher {
         Teacher teacher = new Teacher(userInputTeacher, dept);
         session.persist(teacher);
         transaction.commit();
+    } catch (Exception e){
+        transaction.rollback();
+        e.printStackTrace();
+    }finally {
         session.close();
+    }
+
     }
 
     public static void deleteTeacher(Scanner scanner, SessionFactory factory) {
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
 
-        System.out.println("\n1. Enter id of teacher to remove: ");
-        scanner.nextLine();
+        try {
+            System.out.println("\n1. Enter id of teacher to remove: ");
+            scanner.nextLine();
 
-        int userInputTeacherId = scanner.nextInt();
+            int userInputTeacherId = scanner.nextInt();
 
-        //TODO if else statement to check if teacher id exists
+            //TODO if else statement to check if teacher id exists
 
-        Teacher teacher = new Teacher();
-        teacher.setTeacherId(userInputTeacherId);
-        session.remove(teacher);
-        transaction.commit();
-        session.close();
+            Teacher teacher = new Teacher();
+            teacher.setTeacherId(userInputTeacherId);
+            session.remove(teacher);
+            transaction.commit();
+        }catch(Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
+
     }
 
     public static void renameTeacher(Scanner scanner, SessionFactory factory) {
