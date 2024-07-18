@@ -17,11 +17,12 @@ public class manyToOneInteractive {
     }
 
     public static void manyToOneInteractive() {
-        System.out.println("Welcome to ManyToOneInteractive!");
         SessionFactory factory = new Configuration().configure().buildSessionFactory();
-        //        Transaction transaction = session.beginTransaction();
+
+        System.out.println("\nWelcome to ManyToOneInteractive!");
         try (factory; Session session = factory.openSession(); Scanner scanner = new Scanner(System.in)) {
-            while (true) {
+            boolean keepRunning = true;
+            while (keepRunning) {
                 System.out.println("\n0. Exit");
                 System.out.println("1. Manage Departments");
                 System.out.println("2. Manage Teachers");
@@ -34,7 +35,8 @@ public class manyToOneInteractive {
                 switch (choice) {
                     case 0:
                         System.out.println("Exiting...");
-                        return;
+                        keepRunning = false;
+                        break;
                     case 1:
                         manageDepartments(scanner, factory);
                         break;
@@ -103,55 +105,45 @@ public class manyToOneInteractive {
 
     private static void manageDepartments(Scanner scanner, SessionFactory factory) {
 
-        // YOUR CODE HERE
-        //create a seperate method for each of these four methods in org.example.ManageDept
+        boolean keepRunning = true;
+        while (keepRunning) {
+            System.out.println("\n1. Add Departments");
+            System.out.println("2. Delete Department");
+            System.out.println("3. Modify Department");
+            System.out.println("4. Go back to menu");
+            System.out.println("\n0. Exit");
+            System.out.print("Choose an option: ");
 
-//tester scanner???
-        try (scanner) {
-            while (true) {
-                System.out.println("\n1. Add Departments");
-                System.out.println("2. Delete Department");
-                System.out.println("3. Modify Department");
-                System.out.println("4. Go back to menu");
-                System.out.println("\n0. Exit");
-                System.out.print("Choose an option: ");
-
-                int choice = scanner.nextInt();
-                switch (choice) {
-                    case 0:
-                        System.out.println("Exiting...");
-                        return;
-                    case 1:
-                        ManageDept.addDepartment(scanner, factory);
-                        break;
-                    case 2:
-                        ManageDept.deleteDepartment(scanner, factory);
-                        break;
-                    case 3:
-                        ManageDept.renameDepartment(scanner, factory);
-                        break;
-                    case 4:
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 0:
+                    System.out.println("Exiting...");
+                    return;
+                case 1:
+                    ManageDept.addDepartment(scanner, factory);
+                    break;
+                case 2:
+                    ManageDept.deleteDepartment(scanner, factory);
+                    break;
+                case 3:
+                    ManageDept.renameDepartment(scanner, factory);
+                    break;
+                case 4:
                     //go back to main menu **** try again
-                        manyToOneInteractive();
-                        default:
-                        System.out.println("Invalid option. Please try again.");
-                        break;
-                }
+                    keepRunning = false;
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    break;
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-
         }
-
-
-
     }
 
-    private static void manageTeachers(Scanner scanner, SessionFactory factory) {
 
-        try (scanner) {
-            while (true) {
+
+    private static void manageTeachers(Scanner scanner, SessionFactory factory) {
+        boolean keepRunning = true;
+            while (keepRunning) {
                 System.out.println("\n1. Add Teachers");
                 System.out.println("2. Delete Teacher");
                 System.out.println("3. Modify Teacher");
@@ -176,16 +168,13 @@ public class manyToOneInteractive {
                         break;
                     case 4:
                         //go back to main menu
+                        keepRunning = false;
+                        break;
                     default:
                         System.out.println("Invalid option. Please try again.");
                         break;
                 }
             }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally {
-
-        }
     }
 
 
