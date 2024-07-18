@@ -133,7 +133,7 @@ public class manyToOneInteractive {
                         ManageDept.renameDepartment(scanner, factory);
                         break;
                     case 4:
-                    //go back to main menu
+                    //go back to main menu **** try again
                         manyToOneInteractive();
                         default:
                         System.out.println("Invalid option. Please try again.");
@@ -151,15 +151,6 @@ public class manyToOneInteractive {
     }
 
     private static void manageTeachers(Scanner scanner, SessionFactory factory) {
-
-        // YOUR CODE HERE
-        //create a seperate method for each of these four methods in org.example.ManageTeacher
-        System.out.println("\n1. Add Teachers");
-        System.out.println("2. Delete Teacher");
-        System.out.println("3. Modify Teacher");
-        System.out.println("4. Go back to menu");
-
-
 
         try (scanner) {
             while (true) {
@@ -259,27 +250,17 @@ public class manyToOneInteractive {
             System.out.println("Which Teacher ID would you like to modify:");
             int teacherId = scanner.nextInt();
 
-            //  System.out.println("What is the new name you want to associate with  Teacher ID #: " +  teacherId );
-            //  scanner.nextLine();
-            //  String newTeacherName = scanner.nextLine();
-            // teacher.setTeacherName(userInputNewTeachName);
-
             Teacher teacher = session.get(Teacher.class, teacherId);
-            System.out.println("What department do you want to put Teacher ID #: " +  teacherId );
+            System.out.println("What department do you want to put Teacher ID # " +  teacherId );
+
+            //print out list of departments with id
             int departmentId = scanner.nextInt();
             Department department = session.get(Department.class, departmentId);
             //
             teacher.setDepartment(department);
-            session.merge(department); // copy state of given object onto persistent object with the same odentifier
+            session.merge(department); // copy state of given object onto persistent object with the same identifier
             System.out.println("Teacher assigned to department successfully!");
 
-           /* if (teacher != null && departmentId != null) {
-                //   teacher.setTeacherName(newTeacherName);
-
-            }
-            else {
-                System.out.println("Teacher or Department not found!");
-            }*/
             transaction.commit();
         }catch(Exception e){
             if (transaction != null) {

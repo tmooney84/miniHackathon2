@@ -22,6 +22,9 @@ public class Teacher implements Serializable {
     public Teacher() {
     }
 
+    public Teacher(String teacherName) {
+        this.teacherName = teacherName;
+    }
 
     public Teacher(String teacherName, Department department) {
         this.teacherName = teacherName;

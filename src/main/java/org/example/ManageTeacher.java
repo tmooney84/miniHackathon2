@@ -20,15 +20,16 @@ public class ManageTeacher {
 
         String userInputTeacher = scanner.nextLine();
 
-        System.out.println("\n1. Enter id of department: ");
-        int userInputDept = scanner.nextInt();
+      // System.out.println("\n2. Enter id of department: ");
+      // int userInputDept = scanner.nextInt();
 
         //TODO if else statement to check if dept id exists
 
-        Department dept = new Department();
-        dept.setDeptId(userInputDept);
+        //Department dept = new Department();
+        //dept.setDeptId(userInputDept);
+        //Teacher teacher = new Teacher(userInputTeacher,dept);
 
-        Teacher teacher = new Teacher(userInputTeacher, dept);
+        Teacher teacher = new Teacher(userInputTeacher);
         session.persist(teacher);
         transaction.commit();
     } catch (Exception e){
