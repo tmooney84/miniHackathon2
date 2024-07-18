@@ -61,22 +61,18 @@ public class manyToOneInteractive {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
-
-
     }
 
-    private static void getTeacherList(Session session) {
-        //String hqlSelect2 = "select t from teachers t join fetch t.deparment";
+    private static void listTeachers(Session session) {
+        String deptQuery = "FROM Teacher";
+        TypedQuery<Teacher> query = session.createQuery(deptQuery, Teacher.class);
+        List<Teacher> results = query.getResultList();
 
-        String hqlSelect2 = "select Teacher.teacherName, Department.deptName from Teacher join Department on Teacher.department_Id = Department.deptId";
-
-        TypedQuery<Department> query = session.createQuery(hqlSelect2, Department.class);
-        List<Department> results = query.getResultList();
-
-        System.out.println("Department Id:               Department Name: ");
-        for (Department d : results) {
-            System.out.println(d.getDeptId() + "       " + d.getDeptName());
+        System.out.println("Teacher Id:     " +
+                "Teacher Name: ");
+        for (Teacher d : results) {
+            System.out.printf("%d               %s",d.getTeacherId(),d.getTeacherName());
+            System.out.println();
         }
     }
 
@@ -85,23 +81,25 @@ public class manyToOneInteractive {
         TypedQuery<Department> query = session.createQuery(deptQuery, Department.class);
         List<Department> results = query.getResultList();
 
-        System.out.println("Department Id:               Department Name: ");
+        System.out.println("Department Id:   Department Name: ");
         for (Department d : results) {
-            System.out.println(d.getDeptId() + "       " + d.getDeptName());
+            System.out.printf("%d                %s",d.getDeptId(),d.getDeptName());
+            System.out.println();
         }
     }
 
-    private static void listTeachers(Session session) {
-        String deptQuery = "FROM Teacher";
-        TypedQuery<Department> query = session.createQuery(deptQuery, Department.class);
-        List<Department> results = query.getResultList();
+    private static void getTeacherList(Session session) {
+        String hqlSelect = "select t.teacherName, d.deptName from Teacher t join t.department d";
+        List<Object[]> results = session.createQuery(hqlSelect).getResultList();
 
-        System.out.println("Department Id:               Department Name: ");
-        for (Department d : results) {
-            System.out.println(d.getDeptId() + "       " + d.getDeptName());
-        } 
+        System.out.println("Teacher Name:       Department Name: ");
+        for (Object[] result : results) {
+            String teacherName = (String) result[0];
+            String deptName = (String) result[1];
+           // System.out.println(teacherName + "       " + deptName);
+            System.out.printf("%-20s%-20s%n", teacherName, deptName);
+        }
     }
-
 
     private static void manageDepartments(Scanner scanner, SessionFactory factory) {
 
