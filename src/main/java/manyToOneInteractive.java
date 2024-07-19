@@ -72,12 +72,11 @@ public class manyToOneInteractive {
         TypedQuery<Teacher> query = session.createQuery(hql, Teacher.class);
         List<Teacher> results = query.getResultList();
 
-        System.out.println("Teacher Id:     Teacher Name:    Department Id:");
+        System.out.printf("%-15s %-20s %-15s%n", "Teacher Id", "Teacher Name", "Department Id");
         for (Teacher teacher : results) {
             // Print teacher ID, teacher name, and department ID
             int departmentId = (teacher.getDepartment() != null) ? teacher.getDepartment().getDeptId() : 0;
-            System.out.printf("%d               %s              %d%n",
-                    teacher.getTeacherId(), teacher.getTeacherName(), departmentId);
+            System.out.printf("%-15s %-20s %-15s%n", teacher.getTeacherId(), teacher.getTeacherName(), departmentId);
         }
     }
 
