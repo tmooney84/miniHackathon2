@@ -30,8 +30,32 @@ public class ManageDept {
         }
 
     }
-
     public static void deleteDepartment(Scanner scanner, SessionFactory factory) {
+        Session session = factory.openSession();
+        Transaction transaction = session.beginTransaction();
+        try {
+            System.out.println("\n1. Enter Id of department to remove: ");
+            scanner.nextLine();
+
+            int userInputDept = scanner.nextInt();
+
+            Department dept = session.get(Department.class, userInputDept);
+            if (dept != null) {
+                session.remove(dept);
+                transaction.commit();
+            } else {
+                System.out.println("Department with ID " + userInputDept + " not found.");
+                transaction.rollback();
+            }
+        } catch (Exception e) {
+            transaction.rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
+
+  /*  public static void deleteDepartment(Scanner scanner, SessionFactory factory) {
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
         try {
@@ -51,7 +75,7 @@ public class ManageDept {
             session.close();
         }
 
-    }
+    }  */
 
     public static void renameDepartment(Scanner scanner, SessionFactory factory) {
         //Rename department

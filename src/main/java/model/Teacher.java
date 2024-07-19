@@ -10,14 +10,15 @@ import java.io.Serializable;
 public class Teacher implements Serializable {
     @Serial
     private static final long serialVersionUID = 1L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int teacherId;
     private String teacherName;
+
     @ManyToOne
     @JoinColumn(name = "department_Id")
     private Department department;
-
 
     public Teacher() {
     }
@@ -39,9 +40,10 @@ public class Teacher implements Serializable {
         this.department = department;
     }
 
-    public int getTeacherId(){
+    public int getTeacherId() {
         return teacherId;
     }
+
     public void setTeacherId(int teacherId) {
         this.teacherId = teacherId;
     }
@@ -49,8 +51,10 @@ public class Teacher implements Serializable {
     public String getTeacherName() {
         return teacherName;
     }
+
     public void setTeacherName(String teacherName) {
-        this.teacherName = teacherName; }
+        this.teacherName = teacherName;
+    }
 
     @Override
     public String toString() {
