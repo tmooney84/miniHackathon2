@@ -13,43 +13,43 @@ public class ManageDept {
     public static void addDepartment(Scanner scanner, SessionFactory factory) {
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
-try {
-    System.out.println("\n1. Enter name of department to add: ");
-    scanner.nextLine();
+        try {
+            System.out.println("\n1. Enter name of department to add: ");
+            scanner.nextLine();
 
-    String userInputDept = scanner.nextLine();
+            String userInputDept = scanner.nextLine();
 
-    Department dept = new Department(userInputDept);
-    session.persist(dept);
-    transaction.commit();
-}catch (Exception e){
-    transaction.rollback();
+            Department dept = new Department(userInputDept);
+            session.persist(dept);
+            transaction.commit();
+        }catch (Exception e){
+            transaction.rollback();
 
-}finally {
-    session.close();
-}
+        }finally {
+            session.close();
+        }
 
     }
 
     public static void deleteDepartment(Scanner scanner, SessionFactory factory) {
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
-    try {
-        System.out.println("\n1. Enter Id of department to remove: ");
-        scanner.nextLine();
+        try {
+            System.out.println("\n1. Enter Id of department to remove: ");
+            scanner.nextLine();
 
-        int userInputDept = scanner.nextInt();
+            int userInputDept = scanner.nextInt();
 
-        Department dept = new Department();
-        dept.setDeptId(userInputDept);
-        session.remove(dept);
-        transaction.commit();
-    }catch (Exception e){
-        transaction.rollback();
-        e.printStackTrace();
-    }finally {
-        session.close();
-    }
+            Department dept = new Department();
+            dept.setDeptId(userInputDept);
+            session.remove(dept);
+            transaction.commit();
+        }catch (Exception e){
+            transaction.rollback();
+            e.printStackTrace();
+        }finally {
+            session.close();
+        }
 
     }
 
@@ -57,25 +57,25 @@ try {
         //Rename department
         Session session = factory.openSession();
         Transaction transaction = session.beginTransaction();
-    try {
-        System.out.println("\n1. Enter Id of department to modify: ");
-        int userInputDept = scanner.nextInt();
-        scanner.nextLine();
+        try {
+            System.out.println("\n1. Enter Id of department to modify: ");
+            int userInputDept = scanner.nextInt();
+            scanner.nextLine();
 
-        System.out.println("\n1. Enter new department name: ");
-        String userInputNewDeptName = scanner.nextLine();
+            System.out.println("\n1. Enter new department name: ");
+            String userInputNewDeptName = scanner.nextLine();
 
-        Department dept = session.get(Department.class, userInputDept);
-        dept.setDeptName(userInputNewDeptName);
-        session.merge(dept);
-        transaction.commit();
-    }catch (Exception e){
-        transaction.rollback();
-        e.printStackTrace();
+            Department dept = session.get(Department.class, userInputDept);
+            dept.setDeptName(userInputNewDeptName);
+            session.merge(dept);
+            transaction.commit();
+        }catch (Exception e){
+            transaction.rollback();
+            e.printStackTrace();
 
         }finally {
-        session.close();
-    }
+            session.close();
+        }
 
     }
 

@@ -17,9 +17,9 @@ public class Department implements Serializable {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int deptId;
     private String deptName;
-//        @OneToMany(targetEntity= Teacher.class, cascade = CascadeType.ALL)
+    //        @OneToMany(targetEntity= Teacher.class, cascade = CascadeType.ALL)
     @OneToMany(mappedBy = "department")
-   private List<Teacher> teacherList = new ArrayList<>();
+    private List<Teacher> teacherList = new ArrayList<>();
 
     public Department(int deptId, String deptName) {
         //super();
@@ -27,11 +27,11 @@ public class Department implements Serializable {
         this.deptName = deptName;
     }
 
- public List<Teacher> getTeacherList() {
+    public List<Teacher> getTeacherList() {
         return teacherList;
     }
 
- public void setTeacherList(List<Teacher> teacherList) {
+    public void setTeacherList(List<Teacher> teacherList) {
         this.teacherList = teacherList;
     }
 

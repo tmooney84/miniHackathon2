@@ -8,8 +8,10 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Scanner;
+import java.util.Set;
 
 public class manyToOneInteractive {
     public static void main(String[] args) {
@@ -28,7 +30,7 @@ public class manyToOneInteractive {
                 System.out.println("2. Manage Teachers");
                 System.out.println("3. Assign Teacher to Department");
                 System.out.println("4. List Teachers");
-                System.out.println("5. List Department");
+                System.out.println("5. List Departments");
                 System.out.println("6. List Teachers By Department");
                 System.out.print("Choose an option: ");
                 int choice = scanner.nextInt();
@@ -50,10 +52,10 @@ public class manyToOneInteractive {
                         listTeachers(session);
                         break;
                     case 5:
-                        listDepts(session);
+                        listDepartments(session);  // Renamed from listDepts to listDepartments
                         break;
                     case 6:
-                        getTeacherList(session);
+                        listTeachersByDepartment(session);  // Renamed from getTeacherList to listTeachersByDepartment
                         break;
                     default:
                         System.out.println("Invalid option. Please try again.");
@@ -66,59 +68,52 @@ public class manyToOneInteractive {
     }
 
     private static void listTeachers(Session session) {
-        String deptQuery = "FROM Teacher";
-        TypedQuery<Teacher> query = session.createQuery(deptQuery, Teacher.class);
+        String hql = "FROM Teacher";  // Query to fetch all teachers
+        TypedQuery<Teacher> query = session.createQuery(hql, Teacher.class);
         List<Teacher> results = query.getResultList();
 
-        System.out.println("Teacher Id:     " +
-                "Teacher Name: ");
-        for (Teacher d : results) {
-            System.out.printf("%d               %s",d.getTeacherId(),d.getTeacherName());
-            System.out.println();
+        System.out.println("Teacher Id:     Teacher Name:    Department Id:");
+        for (Teacher teacher : results) {
+            // Print teacher ID, teacher name, and department ID
+            int departmentId = (teacher.getDepartment() != null) ? teacher.getDepartment().getDeptId() : 0;
+            System.out.printf("%d               %s              %d%n",
+                    teacher.getTeacherId(), teacher.getTeacherName(), departmentId);
         }
     }
 
-    private static void listDepts(Session session) {
-        String deptQuery = "FROM Department";
-        TypedQuery<Department> query = session.createQuery(deptQuery, Department.class);
+    private static void listDepartments(Session session) {
+        String hql = "FROM Department";  // Query to fetch all departments
+        TypedQuery<Department> query = session.createQuery(hql, Department.class);
         List<Department> results = query.getResultList();
 
-        System.out.println("Department Id:   Department Name: ");
-        for (Department d : results) {
-            System.out.printf("%d                %s",d.getDeptId(),d.getDeptName());
-            System.out.println();
+        System.out.println("Department Id:   Department Name:");
+        for (Department department : results) {
+            System.out.printf("%d                %s%n", department.getDeptId(), department.getDeptName());
         }
     }
 
-    private static void getTeacherList(Session session) {
-        String hqlSelect = "select t.teacherName, d.deptName from Teacher t join t.department d";
-        List<Object[]> results = session.createQuery(hqlSelect).getResultList();
+    private static void listTeachersByDepartment(Session session) {
+        String hql = "SELECT t.teacherName, d.deptName FROM Teacher t JOIN t.department d";
+        List<Object[]> results = session.createQuery(hql).getResultList();
 
-        System.out.println("Teacher Name:       Department Name: ");
+        System.out.println("Teacher Name:       Department Name:");
         for (Object[] result : results) {
             String teacherName = (String) result[0];
             String deptName = (String) result[1];
-           // System.out.println(teacherName + "       " + deptName);
             System.out.printf("%-20s%-20s%n", teacherName, deptName);
         }
     }
 
     private static void manageDepartments(Scanner scanner, SessionFactory factory) {
-
         boolean keepRunning = true;
         while (keepRunning) {
-            System.out.println("\n1. Add Departments");
+            System.out.println("\n1. Add Department");
             System.out.println("2. Delete Department");
-            System.out.println("3. Modify Department");
-            System.out.println("4. Go back to menu");
-            System.out.println("\n0. Exit");
+            System.out.println("3. Rename Department");  // Renamed from Modify Department to Rename Department
+            System.out.println("0. Back");
             System.out.print("Choose an option: ");
-
             int choice = scanner.nextInt();
             switch (choice) {
-                case 0:
-                    System.out.println("Exiting...");
-                    return;
                 case 1:
                     ManageDept.addDepartment(scanner, factory);
                     break;
@@ -128,8 +123,7 @@ public class manyToOneInteractive {
                 case 3:
                     ManageDept.renameDepartment(scanner, factory);
                     break;
-                case 4:
-                    //go back to main menu **** try again
+                case 0:
                     keepRunning = false;
                     break;
                 default:
@@ -139,126 +133,71 @@ public class manyToOneInteractive {
         }
     }
 
-
-
     private static void manageTeachers(Scanner scanner, SessionFactory factory) {
         boolean keepRunning = true;
-            while (keepRunning) {
-                System.out.println("\n1. Add Teachers");
-                System.out.println("2. Delete Teacher");
-                System.out.println("3. Modify Teacher");
-                System.out.println("4. Go back to menu");
-                System.out.println("\n0. Exit");
-                System.out.print("Choose an option: ");
-
-                int choice = scanner.nextInt();
-
-                switch (choice) {
-                    case 0:
-                        System.out.println("Exiting...");
-                        return;
-                    case 1:
-                     ManageTeacher.addTeachers(scanner, factory);
-                        break;
-                    case 2:
-                        ManageTeacher.deleteTeacher(scanner, factory);
-                        break;
-                    case 3:
-                        ManageTeacher.renameTeacher(scanner, factory);
-                        break;
-                    case 4:
-                        //go back to main menu
-                        keepRunning = false;
-                        break;
-                    default:
-                        System.out.println("Invalid option. Please try again.");
-                        break;
-                }
+        while (keepRunning) {
+            System.out.println("\n1. Add Teacher");
+            System.out.println("2. Delete Teacher");
+            System.out.println("3. Rename Teacher");  // Renamed from Modify Teacher to Rename Teacher
+            System.out.println("0. Back");
+            System.out.print("Choose an option: ");
+            int choice = scanner.nextInt();
+            switch (choice) {
+                case 1:
+                    ManageTeacher.addTeachers(scanner, factory);
+                    break;
+                case 2:
+                    ManageTeacher.deleteTeacher(scanner, factory);
+                    break;
+                case 3:
+                    ManageTeacher.renameTeacher(scanner, factory);
+                    break;
+                case 0:
+                    keepRunning = false;
+                    break;
+                default:
+                    System.out.println("Invalid option. Please try again.");
+                    break;
             }
+        }
     }
 
-
-
-    /*
-    ---- PREVOUS CODE ----
     private static void assignTeacherToDepartment(Scanner scanner, Session session) {
-
-        // Grab the user input by the Id of teaecher and department
-        // Fetch the entities (Teacher and Department)
-        // Somehow update them?
-        // Error handling
-        Transaction transaction = null;
+        Transaction transaction = session.beginTransaction();
         try {
-            transaction = session.beginTransaction();
-            System.out.println("Which Teacher ID would you like to modify:");
+            System.out.println("\n1. Enter Teacher Id to assign: ");
             int teacherId = scanner.nextInt();
-            System.out.println("What department do you want to put Teacher ID #: " +  teacherId );
-            int departmentId = scanner.nextInt();
-            //  System.out.println("What is the new name you want to associate with  Teacher ID #: " +  teacherId );
-            //  scanner.nextLine();
-            //  String newTeacherName = scanner.nextLine();
-            // teacher.setTeacherName(userInputNewTeachName);
+            scanner.nextLine();  // Consume newline
 
+            System.out.println("\n2. Enter Department Id: ");
+            int deptId = scanner.nextInt();
+
+            // Fetch the Teacher and Department from the database
             Teacher teacher = session.get(Teacher.class, teacherId);
-            Department department = session.get(Department.class, departmentId);
+            Department department = session.get(Department.class, deptId);
 
             if (teacher != null && department != null) {
-                //   teacher.setTeacherName(newTeacherName);
+                // Print current department if exists
+                Department currentDept = teacher.getDepartment();
+                System.out.println("Current Department Id: " +
+                        (currentDept != null ? currentDept.getDeptId() : "None"));
+
+                // Assign new department
                 teacher.setDepartment(department);
                 session.merge(teacher);
-                System.out.println("Teacher assigned to department successfully!");
-            }
-            else {
+                transaction.commit();
+
+                // Print new department
+                System.out.println("New Department Id: " + department.getDeptId());
+            } else {
                 System.out.println("Teacher or Department not found!");
+                transaction.rollback();
             }
-            transaction.commit();
-        }catch(Exception e){
+        } catch (Exception e) {
             if (transaction != null) {
                 transaction.rollback();
             }
             e.printStackTrace();
-        } finally {
-            session.close();
         }
     }
-     */
-
-
-
-    private static void assignTeacherToDepartment(Scanner scanner, Session session) {
-
-        // Grab the user input by the Id of teaecher and department
-        // Fetch the entities (Teacher and Department)
-        // Somehow update them?
-        // Error handling
-        Transaction transaction = null;
-        try {
-            transaction = session.beginTransaction();
-            System.out.println("Which Teacher ID would you like to modify:");
-            int teacherId = scanner.nextInt();
-
-            Teacher teacher = session.get(Teacher.class, teacherId);
-            System.out.println("What department do you want to put Teacher ID # " +  teacherId );
-
-            //print out list of departments with id
-            int departmentId = scanner.nextInt();
-            Department department = session.get(Department.class, departmentId);
-            //
-            teacher.setDepartment(department);
-            session.merge(department); // copy state of given object onto persistent object with the same identifier
-            System.out.println("Teacher assigned to department successfully!");
-
-            transaction.commit();
-        }catch(Exception e){
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            e.printStackTrace();
-        } finally {
-            session.close();
-        }
-    }
-
-
-
 }
